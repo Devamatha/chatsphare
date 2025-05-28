@@ -23,7 +23,8 @@ public class ProjectSecurityConfig {
 		// http.authorizeHttpRequests((requests) -> requests.anyRequest().permitAll();
 
 		http.csrf(crsf -> crsf.disable())
-				.authorizeHttpRequests((requests) -> requests.requestMatchers("/api/auth/register","/api/auth/login").permitAll());
+			.authorizeHttpRequests((requests) -> requests
+				.requestMatchers("/api/auth/register","/api/auth/login","/api/auth/resetpassword").permitAll());
 		http.formLogin(withDefaults());
 		http.httpBasic(withDefaults());
 		return http.build();

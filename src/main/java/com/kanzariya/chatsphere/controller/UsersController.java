@@ -36,4 +36,18 @@ public class UsersController {
 		usersService.register(user);
 		return ResponseEntity.ok(Collections.singletonMap("Message", "Data Saved Successfully"));
 	}
+	
+	@PostMapping("/resetpassword")
+	public ResponseEntity<String> resetPassword(@RequestBody Map<String, String> requestBody) {
+	    String email = requestBody.get("email");
+	    String newPassword = requestBody.get("newPassword");
+
+	    if (email == null || newPassword == null) {
+	        return ResponseEntity.badRequest().body("Missing required parameters: email or newPassword.");
+	    }
+
+	    usersService.resetPassword(email, newPassword);
+	    return ResponseEntity.ok("Password reset successfully.");
+	}
+
 }

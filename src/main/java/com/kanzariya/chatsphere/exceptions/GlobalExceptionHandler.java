@@ -78,5 +78,12 @@ public class GlobalExceptionHandler {
 				"Missing path variable: " + ex.getVariableName(), request.getDescription(false).replace("uri=", ""));
 		return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
 	}
+	
+	@ExceptionHandler(UserNotFoundException.class)
+	public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {
+	    Map<String, Object> body = createErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(),
+	            request.getDescription(false).replace("uri=", ""));
+	    return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+	}
 
 }
