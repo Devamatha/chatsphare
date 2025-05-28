@@ -8,12 +8,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @AllArgsConstructor
@@ -34,7 +34,8 @@ public class Users {
 	@NotBlank(message = "Mobile number is required")
 	@Pattern(regexp = "\\d{10}", message = "Mobile number must be 10 digits")
 	@Column(nullable = false)
-	private Long mobileNumber;
+	private String mobileNumber;
 	private String role;
+	//@JsonIgnore
 	private String password;
 }
