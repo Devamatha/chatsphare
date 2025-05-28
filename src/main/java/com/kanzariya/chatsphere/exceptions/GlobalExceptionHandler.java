@@ -17,6 +17,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
+import io.jsonwebtoken.ExpiredJwtException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -78,12 +79,24 @@ public class GlobalExceptionHandler {
 				"Missing path variable: " + ex.getVariableName(), request.getDescription(false).replace("uri=", ""));
 		return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
 	}
-	
-	@ExceptionHandler(UserNotFoundException.class)
-	public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {
-	    Map<String, Object> body = createErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(),
-	            request.getDescription(false).replace("uri=", ""));
-	    return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
-	}
+
+//	@ExceptionHandler(ExpiredJwtException.class)
+//	public ResponseEntity<Map<String, Object>> handleExpiredJwtException(ExpiredJwtException ex) {
+//		return buildErrorResponse(HttpStatus.EXPECTATION_FAILED, "JWT is expired", ex.getMessage(),
+//				"/api/auth/login");
+//	}
+//
+//	private ResponseEntity<Map<String, Object>> buildErrorResponse(HttpStatus status, String error, String message,
+//			String path) {
+//		Map<String, Object> errorDetails = new HashMap<>();
+//		errorDetails.put("timestamp", LocalDateTime.now().toString());
+//		errorDetails.put("status", status.value());
+//		errorDetails.put("error", error);
+//		errorDetails.put("message", message);
+//		errorDetails.put("path", path);
+//
+//		return new ResponseEntity<>(errorDetails, status);
+//	}
 
 }
+

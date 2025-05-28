@@ -38,5 +38,5 @@ public class Users {
 	private String role;
 	//@JsonIgnore
 	private String password;
-	
 }
+

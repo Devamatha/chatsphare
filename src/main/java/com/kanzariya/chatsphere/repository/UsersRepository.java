@@ -17,10 +17,11 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
 	@Query("SELECT u.password, u.role FROM Users u WHERE u.email = :email")
 	List<Object[]> findPasswordAndRoleByEmail(@Param("email") String email);
 
-	@Query("SELECT u.user_Id, u.fullName FROM Users u WHERE u.email = :email")
-	List<Object[]> findUser_IdAndFullNameByEmail(@Param("email") String email);
+	@Query("SELECT u.user_Id, u.fullName FROM Users u WHERE u.email = :input OR u.mobileNumber=:input")
+	List<Object[]> findUser_IdAndFullNameByEmailOrMobile(@Param("input") String input);
+
 	
+	@Query("SELECT u.password, u.role FROM Users u WHERE u.email = :input OR u.mobileNumber = :input")
+	List<Object[]> findPasswordAndRoleByEmailOrMobile(@Param("input") String input);
 	Optional<Users> findByEmail(String email);
-
-
 }
