@@ -111,6 +111,11 @@ public class GlobalExceptionHandler {
 				"Unauthorized to access this resource", webRequest.getDescription(false).replace("uri=", ""));
 		return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
 	}
+	
+	@ExceptionHandler(OTPValidationException.class)
+	public ResponseEntity<String> handleOTPException(OTPValidationException e) {
+	    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+	}
 
 }
 

@@ -28,6 +28,12 @@ public class EmailService {
             throw new RuntimeException("Failed to send email. Please check SMTP settings.", e);
         }
     }
+    public void sendOTPEmail(String to, String otp) {
+        String subject = "Your OTP Code";
+        String body = "<p>Your OTP is: <b>" + otp + "</b></p>" +
+                      "<p>This OTP is valid for 5 minutes. Please do not share it with anyone.</p>";
+        sendEmail(to, subject, body);
+    }
 
 
 }
