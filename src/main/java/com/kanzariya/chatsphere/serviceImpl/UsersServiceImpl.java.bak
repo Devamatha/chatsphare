@@ -38,8 +38,7 @@ public class UsersServiceImpl implements UsersService {
 		users.setRole(users.getRole());
 		return usersRepository.save(users);
 	}
-
-
+	
 	@Override
 	public void resetPassword(String email, String newPassword) {
 	    Optional<Users> userOptional = usersRepository.findByEmail(email);
