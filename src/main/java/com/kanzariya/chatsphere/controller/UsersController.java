@@ -54,14 +54,14 @@ public class UsersController {
 	}
 
 	@PostMapping("forgetpassword")
-	public ResponseEntity<String> resetPassword(@RequestBody Map<String, String> requestBody) {
-		String email = requestBody.get("email");
-		if (email == null) {
-			return ResponseEntity.badRequest().body("Missing required parameters: email ");
-		}
-		usersService.forgetPassword(email);
-		return ResponseEntity.ok("Password reset successfully.");
-	}
+	public ResponseEntity<Map<String, String>> resetPassword(@RequestBody Map<String, String> requestBody) {
+        String email = requestBody.get("email");
+        if (email == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Missing required parameter: email"));
+        }
+        usersService.forgetPassword(email);
+        return ResponseEntity.ok(Map.of("message", "Password reset successfully."));
+    }
 
 	@PostMapping("updatingPassword")
 	public ResponseEntity<String> updatePassword(@RequestBody Map<String, String> requestBody) {
