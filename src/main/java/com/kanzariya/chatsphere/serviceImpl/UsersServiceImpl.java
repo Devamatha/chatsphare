@@ -9,6 +9,7 @@ import com.kanzariya.chatsphere.entity.Users;
 import com.kanzariya.chatsphere.exceptions.UserNotFoundException;
 import com.kanzariya.chatsphere.repository.UsersRepository;
 import com.kanzariya.chatsphere.service.EmailService;
+import com.kanzariya.chatsphere.service.OTPService;
 import com.kanzariya.chatsphere.service.UsersService;
 
 import jakarta.mail.MessagingException;
@@ -18,12 +19,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UsersServiceImpl implements UsersService {
 	private final UsersRepository usersRepository;
-	
+
 	private final EmailService emailService;
+
+	private final OTPService otpService;
 
 	// PasswordEncoder bCryptPasswordEncoder;
 	BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-
 
 	@Override
 	public Users register(Users users) {
@@ -39,25 +41,18 @@ public class UsersServiceImpl implements UsersService {
 		return usersRepository.save(users);
 	}
 
-
 	@Override
-	public void resetPassword(String email, String newPassword) {
-	    Optional<Users> userOptional = usersRepository.findByEmail(email);
+	public void forgetPassword(String email) {
+		Users userOptional = usersRepository.findByEmail(email);
 
-	    if (userOptional.isEmpty()) {
-	        throw new UserNotFoundException("Invalid email address");
-	    }
+		if (userOptional != null) {
 
-	    Users user = userOptional.get();
-	    user.setPassword(bCryptPasswordEncoder.encode(newPassword));
-	    usersRepository.save(user);
+			otpService.generateAndSendOTP(email);
 
-	    // Directly call sendEmail, no need for try-catch in this class
-	    emailService.sendEmail(email, "Password Reset Confirmation", "Your password has been successfully reset.");
+		} else {
+			throw new UserNotFoundException("User Not found " + email);
+		}
+
 	}
-
-
-
-
 
 }

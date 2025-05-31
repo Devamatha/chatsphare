@@ -24,7 +24,7 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
 	@Query("SELECT u.password, u.role FROM Users u WHERE u.email = :input OR u.mobileNumber = :input")
 	List<Object[]> findPasswordAndRoleByEmailOrMobile(@Param("input") String input);
 	
-	Optional<Users> findByEmail(String email);
+	Users findByEmail(String email);
 
 
 }

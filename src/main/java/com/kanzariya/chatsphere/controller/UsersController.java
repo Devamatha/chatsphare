@@ -3,6 +3,7 @@ package com.kanzariya.chatsphere.controller;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import io.jsonwebtoken.security.Keys;
 import jakarta.validation.Valid;
@@ -13,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,7 @@ import io.jsonwebtoken.Jwts;
 
 import com.kanzariya.chatsphere.constant.ApplicationConstants;
 import com.kanzariya.chatsphere.entity.Users;
+import com.kanzariya.chatsphere.exceptions.UserNotFoundException;
 import com.kanzariya.chatsphere.records.LoginRequestDTO;
 import com.kanzariya.chatsphere.records.LoginResponseDTO;
 import com.kanzariya.chatsphere.repository.UsersRepository;
@@ -42,6 +45,7 @@ public class UsersController {
 	private final UsersRepository usersRepository;
 	private final AuthenticationManager authenticationManager;
 	private final Environment env;
+	BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
 	@PostMapping("register")
 	public ResponseEntity<Map<String, String>> register(@RequestBody Users user) {
@@ -49,8 +53,18 @@ public class UsersController {
 		return ResponseEntity.ok(Collections.singletonMap("Message", "Data Saved Successfully"));
 	}
 
-	@PostMapping("resetpassword")
+	@PostMapping("forgetpassword")
 	public ResponseEntity<String> resetPassword(@RequestBody Map<String, String> requestBody) {
+		String email = requestBody.get("email");
+		if (email == null) {
+			return ResponseEntity.badRequest().body("Missing required parameters: email ");
+		}
+		usersService.forgetPassword(email);
+		return ResponseEntity.ok("Password reset successfully.");
+	}
+
+	@PostMapping("updatingPassword")
+	public ResponseEntity<String> updatePassword(@RequestBody Map<String, String> requestBody) {
 		String email = requestBody.get("email");
 		String newPassword = requestBody.get("newPassword");
 
@@ -58,7 +72,18 @@ public class UsersController {
 			return ResponseEntity.badRequest().body("Missing required parameters: email or newPassword.");
 		}
 
-		usersService.resetPassword(email, newPassword);
+		Users userinfo = usersRepository.findByEmail(email);
+
+		if (userinfo != null) {
+			userinfo.setEmail(email);
+			userinfo.setPassword(bCryptPasswordEncoder.encode(newPassword));
+			usersRepository.save(userinfo);
+		} else {
+
+			throw new UserNotFoundException("User is Not found " + email);
+		}
+
+		// usersService.forgetPassword(email, newPassword);
 		return ResponseEntity.ok("Password reset successfully.");
 	}
 
