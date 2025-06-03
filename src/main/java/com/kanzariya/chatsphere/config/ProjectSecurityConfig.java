@@ -63,7 +63,8 @@ public class ProjectSecurityConfig {
 				.addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)
 				.authorizeHttpRequests(requests ->
 		      requests
-	      .requestMatchers("/api/auth/register", "/api/auth/login","/otp/sendotp","/otp/validateotp","/api/auth/resetpassword","/api/auth/forgetpassword","/api/auth/updatingPassword").permitAll()
+	      .requestMatchers("/api/auth/register", "/api/auth/login","/otp/sendotp","/otp/validateotp","/api/auth/resetpassword","/api/auth/forgetpassword","/api/auth/updatingPassword"
+	    		  ,"/api/messages/send","/api/messages/{receiverId}").permitAll()
 				      .requestMatchers(AUTH_WHITE_LIST).permitAll().anyRequest().authenticated());
 
 		http.formLogin(withDefaults());
