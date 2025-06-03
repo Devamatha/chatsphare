@@ -1,30 +1,55 @@
 package com.kanzariya.chatsphere.serviceImpl;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.kanzariya.chatsphere.entity.Message;
+import com.kanzariya.chatsphere.exceptions.UserNotFoundException;
 import com.kanzariya.chatsphere.repository.MessageRepository;
 import com.kanzariya.chatsphere.service.MessageService;
+
 @Service
 public class MessageServiceImpl implements MessageService {
-	
-	 private MessageRepository messageRepository;
-	 public MessageServiceImpl(MessageRepository messageRepository) {
-	        this.messageRepository = messageRepository;
-	    }
-	 public Message sendMessage(Long senderId, Long receiverId, String content) {
-	        Message message = new Message();
-	        message.setSenderId(senderId);
-	        message.setReceiverId(receiverId);
-	        message.setContent(content);
-	        
-	        return messageRepository.save(message);
-	    }
 
-	    public List<Message> getMessages(Long receiverId) {
-	        return messageRepository.findByReceiverId(receiverId);
-	    }
-	
+	private MessageRepository messageRepository;
+
+	public MessageServiceImpl(MessageRepository messageRepository) {
+		this.messageRepository = messageRepository;
+	}
+
+	public Message sendMessage(Long senderId, Long receiverId, String content) {
+		Message message = new Message();
+		message.setSenderId(senderId);
+		message.setReceiverId(receiverId);
+		message.setContent(content);
+
+		return messageRepository.save(message);
+	}
+
+	public List<Message> getMessages(Long receiverId) {
+		return messageRepository.findByReceiverId(receiverId);
+	}
+
+	@Override
+	public Message updateMessage(Long id, String content) {
+		Message optionalMessage = messageRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("Message is Not found" + id));
+		optionalMessage.setContent(content);
+		return messageRepository.save(optionalMessage);
+	}
+
+	@Override
+	public ResponseEntity<Map<String,String>> deleteMessage(Long id) {
+		if (messageRepository.existsById(id)) {
+            messageRepository.deleteById(id);
+            return ResponseEntity.ok(Collections.singletonMap("Message", "Data Saved Successfully"));
+        } else {
+            throw new UserNotFoundException("Message ID "+id +"is not found");
+        }
+	}
+
 }
