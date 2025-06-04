@@ -32,25 +32,25 @@ public class MessageController {
 //	@MessageMapping("/ws-chat/{receiverId}")
 //	@DestinationVariable Long
 	@PostMapping("/send")
-	public ResponseEntity<Message> sendMessage(@RequestParam Long senderId, @RequestParam Long receiverId,
-			@RequestParam(required = false) Long groupId, @RequestParam String content) {
-		Message message = messageService.sendMessage(senderId, receiverId, groupId, content);
-	
-		//simpMessagingTemplate.convertAndSend("/topic/messages" + receiverId, content);
-		return ResponseEntity.ok(message);
-	}
+    public ResponseEntity<Message> sendMessage(@RequestParam int senderId, 
+                                               @RequestParam(required = false) int receiverId, 
+                                               @RequestParam(required = false) Long groupId, 
+                                               @RequestParam String content) {
+        Message message = messageService.sendMessage(senderId, receiverId, groupId, content);
+        return ResponseEntity.ok(message);
+    }
 
-	@GetMapping("/{receiverId}")
-	public ResponseEntity<List<Message>> getMessages(@PathVariable Long receiverId) {
-		List<Message> messages = messageService.getMessages(receiverId);
-		return ResponseEntity.ok(messages);
-	}
+    @GetMapping("/{receiverId}")
+    public ResponseEntity<List<Message>> getMessages(@PathVariable Long receiverId) {
+        List<Message> messages = messageService.getMessages(receiverId);
+        return ResponseEntity.ok(messages);
+    }
 
-	@GetMapping("/group/{groupId}")
-	public ResponseEntity<List<Message>> getMessagesByGroup(@PathVariable Long groupId) {
-		List<Message> messages = messageService.getMessagesByGroup(groupId);
-		return ResponseEntity.ok(messages);
-	}
+    @GetMapping("/group/{groupId}")
+    public ResponseEntity<List<Message>> getMessagesByGroup(@PathVariable Long groupId) {
+        List<Message> messages = messageService.getMessagesByGroup(groupId);
+        return ResponseEntity.ok(messages);
+    }
 
 	@PutMapping("/updateMessage/{id}")
 	public Message updateMessage(@PathVariable Long id, @RequestParam String content) {

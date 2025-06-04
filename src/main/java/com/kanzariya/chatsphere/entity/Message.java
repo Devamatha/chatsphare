@@ -20,9 +20,9 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long senderId;
+    private int senderId;
     
-    private Long receiverId;  // Keeps user-to-user messaging intact
+    private int receiverId;  // Keeps user-to-user messaging intact
     private Long groupId;      // NEW: Allows group messaging
     
     private String content;
