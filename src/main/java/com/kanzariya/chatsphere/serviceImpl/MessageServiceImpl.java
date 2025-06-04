@@ -30,9 +30,9 @@ public class MessageServiceImpl implements MessageService {
         message.setTimestamp(LocalDateTime.now());
         
         if (groupId != null) {
-            message.setGroupId(groupId);  // Group chat message
+            message.setGroupId(groupId);  
         } else {
-            message.setReceiverId(receiverId);  // Direct message
+            message.setReceiverId(receiverId);  
         }
 
         return messageRepository.save(message);

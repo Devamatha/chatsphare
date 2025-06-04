@@ -32,13 +32,8 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Configuration
 public class ProjectSecurityConfig {
-	private static final String[] AUTH_WHITE_LIST = {
-		    "/v3/api-docs/**",
-		    "/swagger-ui/**",
-		    "/swagger-ui.html",
-		    "/swagger-resources/**",
-		    "/webjars/**"
-		};
+	private static final String[] AUTH_WHITE_LIST = { "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
+			"/swagger-resources/**", "/webjars/**" };
 
 	@Bean
 	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -61,11 +56,12 @@ public class ProjectSecurityConfig {
 				.addFilterAt(new AuthoritiesLoggingAtFilter(), BasicAuthenticationFilter.class)
 				.addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class)
 				.addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)
-				.authorizeHttpRequests(requests ->
-		      requests
-	      .requestMatchers("/api/auth/register", "/api/auth/login","/otp/sendotp","/otp/validateotp","/api/auth/resetpassword","/api/auth/forgetpassword","/api/auth/updatingPassword"
-	    		  ,"/api/messages/send","/api/messages/{receiverId}","/api/messages/updateMessage/{id}","/api/messages/deleteMessage/{id}").permitAll()
-				      .requestMatchers(AUTH_WHITE_LIST).permitAll().anyRequest().authenticated());
+				.authorizeHttpRequests(requests -> requests.requestMatchers("/api/groups/*").hasRole("user")
+						.requestMatchers("/api/auth/register", "/api/auth/login", "/otp/sendotp", "/otp/validateotp",
+								"/api/auth/resetpassword", "/api/auth/forgetpassword", "/api/auth/updatingPassword",
+								"/api/messages/send", "/api/messages/{receiverId}", "/api/messages/updateMessage/{id}",
+								"/api/messages/deleteMessage/{id}")
+						.permitAll().requestMatchers(AUTH_WHITE_LIST).permitAll().anyRequest().authenticated());
 
 		http.formLogin(withDefaults());
 		http.httpBasic(hbc -> hbc.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()));
