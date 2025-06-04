@@ -16,16 +16,15 @@ import lombok.NoArgsConstructor;
 @Data
 public class Message {
     
-    @Id
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     private Long senderId;
-    private Long receiverId;
+    
+    private Long receiverId;  // Keeps user-to-user messaging intact
+    private Long groupId;      // NEW: Allows group messaging
+    
     private String content;
     private LocalDateTime timestamp;
-    
-   
-    
-    // Getters & Setters
 }

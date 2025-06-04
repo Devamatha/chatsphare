@@ -7,6 +7,7 @@ import com.kanzariya.chatsphere.entity.Message;
 import java.util.List;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
-    List<Message> findByReceiverId(Long receiverId);
+	List<Message> findByReceiverId(Long receiverId);
+    List<Message> findByGroupId(Long groupId);
 }
 

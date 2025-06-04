@@ -26,18 +26,26 @@ public class MessageController {
 		this.messageService = messageService;
 	}
 
-	@PostMapping("/send")
-	public ResponseEntity<Message> sendMessage(@RequestParam Long senderId, @RequestParam Long receiverId,
-			@RequestParam String content) {
-		Message message = messageService.sendMessage(senderId, receiverId, content);
-		return ResponseEntity.ok(message);
-	}
+	 @PostMapping("/send")
+	    public ResponseEntity<Message> sendMessage(@RequestParam Long senderId, 
+	                                               @RequestParam(required = false) Long receiverId, 
+	                                               @RequestParam(required = false) Long groupId, 
+	                                               @RequestParam String content) {
+	        Message message = messageService.sendMessage(senderId, receiverId, groupId, content);
+	        return ResponseEntity.ok(message);
+	    }
 
-	@GetMapping("/{receiverId}")
-	public ResponseEntity<List<Message>> getMessages(@PathVariable Long receiverId) {
-		List<Message> messages = messageService.getMessages(receiverId);
-		return ResponseEntity.ok(messages);
-	}
+	    @GetMapping("/{receiverId}")
+	    public ResponseEntity<List<Message>> getMessages(@PathVariable Long receiverId) {
+	        List<Message> messages = messageService.getMessages(receiverId);
+	        return ResponseEntity.ok(messages);
+	    }
+
+	    @GetMapping("/group/{groupId}")
+	    public ResponseEntity<List<Message>> getMessagesByGroup(@PathVariable Long groupId) {
+	        List<Message> messages = messageService.getMessagesByGroup(groupId);
+	        return ResponseEntity.ok(messages);
+	    }
 
 	@PutMapping("/updateMessage/{id}")
 	public Message updateMessage(@PathVariable Long id, @RequestParam String content) {

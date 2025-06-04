@@ -1,5 +1,6 @@
 package com.kanzariya.chatsphere.serviceImpl;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -21,18 +22,32 @@ public class MessageServiceImpl implements MessageService {
 		this.messageRepository = messageRepository;
 	}
 
-	public Message sendMessage(Long senderId, Long receiverId, String content) {
-		Message message = new Message();
-		message.setSenderId(senderId);
-		message.setReceiverId(receiverId);
-		message.setContent(content);
+	@Override
+    public Message sendMessage(Long senderId, Long receiverId, Long groupId, String content) {
+        Message message = new Message();
+        message.setSenderId(senderId);
+        message.setContent(content);
+        message.setTimestamp(LocalDateTime.now());
+        
+        if (groupId != null) {
+            message.setGroupId(groupId);  // Group chat message
+        } else {
+            message.setReceiverId(receiverId);  // Direct message
+        }
 
-		return messageRepository.save(message);
-	}
+        return messageRepository.save(message);
+    }
 
-	public List<Message> getMessages(Long receiverId) {
-		return messageRepository.findByReceiverId(receiverId);
-	}
+    @Override
+    public List<Message> getMessages(Long receiverId) {
+        return messageRepository.findByReceiverId(receiverId);  // Fetch direct messages
+    }
+
+    @Override
+    public List<Message> getMessagesByGroup(Long groupId) {
+        return messageRepository.findByGroupId(groupId);  // Fetch group messages
+    }
+
 
 	@Override
 	public Message updateMessage(Long id, String content) {
