@@ -60,7 +60,7 @@ public class ProjectSecurityConfig {
 						.requestMatchers("/api/auth/register", "/api/auth/login", "/otp/sendotp", "/otp/validateotp",
 								"/api/auth/resetpassword", "/api/auth/forgetpassword", "/api/auth/updatingPassword",
 								"/api/messages/send", "/api/messages/{receiverId}", "/api/messages/updateMessage/{id}",
-								"/api/messages/deleteMessage/{id}")
+								"/api/messages/deleteMessage/{id}","/ws-chat/**", "/ws-chat")
 						.permitAll().requestMatchers(AUTH_WHITE_LIST).permitAll().anyRequest().authenticated());
 
 		http.formLogin(withDefaults());

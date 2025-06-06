@@ -32,13 +32,46 @@ public class MessageController {
 //	@MessageMapping("/ws-chat/{receiverId}")
 //	@DestinationVariable Long
 	@PostMapping("/send")
+//	@MessageMapping("/chat")
+
     public ResponseEntity<Message> sendMessage(@RequestParam int senderId, 
                                                @RequestParam(required = false) int receiverId, 
                                                @RequestParam(required = false) Long groupId, 
                                                @RequestParam String content) {
         Message message = messageService.sendMessage(senderId, receiverId, groupId, content);
+        
+        simpMessagingTemplate.convertAndSendToUser(
+        		 String.valueOf(receiverId),
+                "/queue/messages",
+                content
+            );
         return ResponseEntity.ok(message);
     }
+
+	
+	@MessageMapping("/chat")
+	public void handleChatMessage(Message message) {
+	    // Save message if needed
+	    messageService.sendMessage(
+	        message.getSenderId(),
+	        message.getReceiverId(),
+	        message.getGroupId(),
+	        message.getContent()
+	    );
+
+	    // Send to the receiver's queue
+//	    simpMessagingTemplate.convertAndSendToUser(
+//	            String.valueOf(message.getReceiverId()),
+//	            "/queue/messages",
+//	            message
+//	    );
+	    
+	    simpMessagingTemplate.convertAndSend(
+	    	    "/queue/messages/" + message.getReceiverId(),
+	    	    message
+	    	);
+
+	}
 
     @GetMapping("/{receiverId}")
     public ResponseEntity<List<Message>> getMessages(@PathVariable Long receiverId) {

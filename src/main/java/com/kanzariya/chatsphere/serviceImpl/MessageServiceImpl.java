@@ -26,8 +26,8 @@ public class MessageServiceImpl implements MessageService {
         this.usersRepository = usersRepository;
     }
 
-    @Override
     
+    @Override
     public Message sendMessage(int senderId, int receiverId, Long groupId, String content) {
         // Validate sender ID exists
         Users sender = usersRepository.findById(senderId)
