@@ -25,6 +25,9 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
 	List<Object[]> findPasswordAndRoleByEmailOrMobile(@Param("input") String input);
 	
 	Users findByEmail(String email);
+	
+    List<Users> findByFullNameContainingIgnoreCase(String fullName);
+
 
 
 }

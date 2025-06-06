@@ -1,6 +1,6 @@
 package com.kanzariya.chatsphere.serviceImpl;
 
-import java.util.Optional;
+import java.util.List;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,6 @@ import com.kanzariya.chatsphere.service.EmailService;
 import com.kanzariya.chatsphere.service.OTPService;
 import com.kanzariya.chatsphere.service.UsersService;
 
-import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -55,4 +54,8 @@ public class UsersServiceImpl implements UsersService {
 
 	}
 
+	
+	  public List<Users> getUserByFullName(String fullName) {
+	        return usersRepository.findByFullNameContainingIgnoreCase(fullName);
+	    }
 }

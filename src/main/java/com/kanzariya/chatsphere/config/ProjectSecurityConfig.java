@@ -61,7 +61,10 @@ public class ProjectSecurityConfig {
 								"/api/auth/resetpassword", "/api/auth/forgetpassword", "/api/auth/updatingPassword",
 								"/api/messages/send", "/api/messages/{receiverId}", "/api/messages/updateMessage/{id}",
 								"/api/messages/deleteMessage/{id}","/ws-chat/**", "/ws-chat")
-						.permitAll().requestMatchers(AUTH_WHITE_LIST).permitAll().anyRequest().authenticated());
+						.permitAll()
+						.requestMatchers(AUTH_WHITE_LIST).permitAll()
+						.requestMatchers("/api/auth/search/{name}").authenticated()
+						);
 
 		http.formLogin(withDefaults());
 		http.httpBasic(hbc -> hbc.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()));
